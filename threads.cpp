@@ -16,8 +16,8 @@ void* threadFunc(void* data)
 int main()
 {
     pthread_t tids[100];
-    int intArray[100];
-    if(pthread_create(&tids, NULL, threadFunc, (void*)(intArray)) != 0)
+    
+    if(pthread_create(&tids, NULL, threadFunc, (void*)(tids)) != 0)
 	{
 		perror("pthread_create");
 		exit(-1);
