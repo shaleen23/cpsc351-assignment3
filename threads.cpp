@@ -110,17 +110,8 @@ struct node *deleteNode(struct node *root, int key)
   return root;
 }
 
-/*
-1.  The program shall be invoked as ./threads <number> where <number> is the number of threads.  For example, ./threads 10 will create 10 threads.
 
-2. The program will then create the specified number of threads and each thread will then generate 100 random numbers in range of 0 -- 100000 and insert them into the same shared binary search tree that is shared between all threads.
-
-3.  All threads should be allowed to insert the numbers at the same time while ensuring proper synchronization using pthread mutexes (i.e., no two threads will be modifying the tree at the same time).
-
-4. While the created threads are busy inserting numbers, the main thread waits for the other threads to terminate.  Once all threads terminate the main thread will print all numbers in the binary tree. Correctly printed numbers should be in order (as that is the point of the binary search tree).
-*/
-
-node *root = NULL;                                  // set the tree root to NULL
+node *root = NULL;  // set the tree root to NULL
 pthread_mutex_t fMutex = PTHREAD_MUTEX_INITIALIZER; // create a mutex
 
 int argv[1]; // create argv to determine number of threads to create
@@ -128,7 +119,7 @@ int argv[1]; // create argv to determine number of threads to create
 void *threadFunc(void *data)
 {
 
-  for (int i = 0; i < 100; ++i) // iterate through 100 times. 1 thread = 100 random numbers between 0-100000
+  for (int i = 0; i < 100; ++i) // iterate through 100 times. 1 thread = 100 random numbers generated between 0-100000
   {
     pthread_mutex_lock(&fMutex); // lock mutex to prevent deadlocking
 
@@ -148,7 +139,7 @@ int main(int argc, char **argv)
 
   for (int i = 0; i < conv; ++i) // iterate through the number of threads requested
   {
-    /*pthread_create(&(tids[i]), NULL, threadFunc, NULL);*/
+    
     if (pthread_create(&(tids[i]), NULL, &threadFunc, NULL) != 0) // check if the pthread isn't equal to 0, then create the thread if it isn't
     {
       perror("pthread_create");
@@ -164,7 +155,7 @@ int main(int argc, char **argv)
       exit(-1);
     }
 
-    inorder(root); // set the numbers in order once completed
+    inorder(root); // set the numbers in an inorder fashion once completed
 
     return 0;
   }
