@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// lines 15 through 99 is for the binary search tree
+// lines 15 through 111 is for the binary search tree
 struct node
 {
   int key;
