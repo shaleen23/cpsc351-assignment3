@@ -17,6 +17,8 @@ Language: C++
 EXECUTION INSTRUCTIONS
 ======================
 - Compile source code with g++ or clang++
-- Run via terminal with the file name -lpthread
+- Run via terminal with the file name and -lpthread
+- example: g++ threads.cpp -lpthread -o threads
+    -./threads <specifiy number of threads you want to create> 
 ```
 
