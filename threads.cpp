@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// lines 15 through 111 is for the binary search tree
+// lines 14 through 111 is for the binary search tree
 struct node
 {
   int key;
@@ -118,24 +118,37 @@ int argv[1]; // create argv to determine number of threads to create
 
 void *threadFunc(void *data)
 {
+  
+if(pthread_mutex_lock(&fMutex) < 0) //lock the mutex to prevent deadlocking and race conditions from occuring in the critical sections
+	{
+		perror("pthread_mutex_lock");
+		exit(1);
+	}
+	
+	
 
   for (int i = 0; i < 100; ++i) // iterate through 100 times. 1 thread = 100 random numbers generated between 0-100000
   {
-    pthread_mutex_lock(&fMutex); // lock mutex to prevent deadlocking
-
-    int random = rand() % 100001;  // generate 100 random numbers in range of 0 -- 100,000
-    root = insert(root, random);   // insert the random number into the BST
-    pthread_mutex_unlock(&fMutex); // unlock mutex once done
+     
+      int random = rand() % 100001;  // generate 100 random numbers in range of 0 -- 100,000
+      root = insert(root, random); // generate 100 random numbers in range of 0 -- 100,000
+    
+     
   }
+  if(pthread_mutex_unlock(&fMutex) < 0) // Unlock the mutex to allow other threads to enter the critical section
+	{
+		perror("pthread_mutex_unlock");
+		exit(1);
+	}
+  return root; //return the root values 
 }
 
 int main(int argc, char **argv)
 {
-  char *p;                           // create a char in order to convert argv[1] into an int
-  int NUMBER_OF_THREADS;             // create a variable to iterate through the thread
-  pthread_t tids[NUMBER_OF_THREADS]; // create the thread
-
+  char *p; // create a char in order to convert argv[1] into an int    
   long conv = strtol(argv[1], &p, 10); // conv converts argv[1] into an int
+  int NUMBER_OF_THREADS = conv; // create a variable to iterate through the thread and set it equal to conv aka the number of threads you want to create
+  pthread_t tids[NUMBER_OF_THREADS]; // create the thread
 
   for (int i = 0; i < conv; ++i) // iterate through the number of threads requested
   {
@@ -154,9 +167,9 @@ int main(int argc, char **argv)
       perror("pthread_join");
       exit(-1);
     }
-
-    inorder(root); // set the numbers in an inorder fashion once completed
-
-    return 0;
   }
-}
+
+
+  inorder(root); //set all the numbers in an inorder fashion once completed
+   return 0;
+} 
